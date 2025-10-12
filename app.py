@@ -70,7 +70,7 @@ def show_entries():
 
     # getting all entries for list
     db = get_db()
-    cur = db.execute('select title, text, category from entries order by id desc')
+    cur = db.execute('select id, title, text, category from entries order by id desc')
     entries = cur.fetchall()
 
     # getting distinct categories for categories menu
@@ -122,3 +122,17 @@ def show_selected():
     for row in rows:
         categories.append(row['category'])
     return render_template('show_entries.html', entries=entries, categories=categories, selected_category=selected_category)
+
+@app.route('/delete_entry', methods=['POST'])
+def delete_entry():
+    # getting the id of the desired post to delete
+    db = get_db()
+    selected_entry_id = request.form['deleted_post']
+
+    # Deleting the entry from the database, which means
+    # it won't show up when we redirect to the homepage
+    cur = db.execute('DELETE from entries where id = ?', [selected_entry_id])
+    db.commit()
+    flash("Entry Deleted")
+    return redirect(url_for('show_entries'))
+
