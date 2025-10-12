@@ -66,10 +66,14 @@ def close_db(error):
 
 @app.route('/')
 def show_entries():
+    """Show the entries in a database. It shows title, text, and category"""
+
+    # getting all entries for list
     db = get_db()
     cur = db.execute('select title, text, category from entries order by id desc')
     entries = cur.fetchall()
 
+    # getting distinct categories for categories menu
     cur2 = db.execute('select distinct category from entries')
     rows = cur2.fetchall()
     categories = list()
@@ -78,9 +82,13 @@ def show_entries():
 
     return render_template('show_entries.html', entries=entries, categories=categories)
 
-
 @app.route('/add', methods=['POST'])
 def add_entry():
+    """Adds an entry to database. It adds an entry with a
+    users title, text, and category"""
+
+    # inserting the entry into the table then shows the
+    # updated list with the newly added entry
     db = get_db()
     db.execute('insert into entries (title, text, category) values (?, ?, ?)',
                [request.form['title'], request.form['text'], request.form['category']])
@@ -88,7 +96,29 @@ def add_entry():
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
 
-#@app.route('/select_category', methods=['POST'])
-#def show_selected():
-#    db  = get_db()
-#    db.execute('SELECT title, text, category FROM entries WHERE category={request.form['selected-category']}')
+@app.route('/show_selected', methods=['POST'])
+def show_selected():
+    """Shows entries of a specified category given by the user"""
+
+    # getting the user desired category
+    db  = get_db()
+    selected_category = request.form['selected_category']
+
+    # using that input to query a database for entries with
+    # the specified category
+    cur = db.execute('SELECT title, text, category FROM entries WHERE category = ?', [selected_category])
+    entries = cur.fetchall()
+    flash(f'Showing results for {selected_category}')
+
+    # redirects home, showing all entries
+    if selected_category == "all":
+        return redirect(url_for('show_entries'))
+
+    # had to copy and paste so the distinct categories
+    # menu stays intact
+    cur2 = db.execute('select distinct category from entries')
+    rows = cur2.fetchall()
+    categories = list()
+    for row in rows:
+        categories.append(row['category'])
+    return render_template('show_entries.html', entries=entries, categories=categories, selected_category=selected_category)

@@ -15,16 +15,17 @@
     <aside>
         <h1>Filter Category</h1>
 
-        <form name="selected-category">
+        <form action="{{ url_for('show_selected') }}" method="post" name="selected-category">
 
-                <select>
+                <select name="selected_category">
                     <option disabled>Category</option>
                     {% for category in categories %}
-                        <option value="{{  category }}">{{ category }}</option>
+                        <option name="show_selected" value="{{  category }}">{{ category }}</option>
                     {% endfor %}
+                    <option value="all" >All</option>
                 </select>
 
-            <button type="submit">Filter</button>
+            <button type="submit" >Filter</button>
 
 
 
@@ -34,6 +35,8 @@
   <ul class="entries">
   {% for entry in entries %}
     <li><h2>{{ entry.title }}</h2> <h2 id="category">{{ entry.category }}</h2>{{ entry.text|safe }}</li>
+      <form><button name="delete_post" type="submit" value ={{ entry.title }}>Delete Post</button></form>
+
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em></li>
   {% endfor %}
