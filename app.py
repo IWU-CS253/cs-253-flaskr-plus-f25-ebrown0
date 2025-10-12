@@ -69,7 +69,14 @@ def show_entries():
     db = get_db()
     cur = db.execute('select title, text, category from entries order by id desc')
     entries = cur.fetchall()
-    return render_template('show_entries.html', entries=entries)
+
+    cur2 = db.execute('select distinct category from entries')
+    rows = cur2.fetchall()
+    categories = list()
+    for row in rows:
+        categories.append(row['category'])
+
+    return render_template('show_entries.html', entries=entries, categories=categories)
 
 
 @app.route('/add', methods=['POST'])
@@ -80,3 +87,8 @@ def add_entry():
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
+
+#@app.route('/select_category', methods=['POST'])
+#def show_selected():
+#    db  = get_db()
+#    db.execute('SELECT title, text, category FROM entries WHERE category={request.form['selected-category']}')
