@@ -111,8 +111,9 @@ def show_selected():
     flash(f'Showing results for {selected_category}')
 
     # redirects home, showing all entries
-    if selected_category == "all":
+    if selected_category == "all" or selected_category == "":
         return redirect(url_for('show_entries'))
+
 
     # had to copy and paste so the distinct categories
     # menu stays intact
@@ -125,6 +126,8 @@ def show_selected():
 
 @app.route('/delete_entry', methods=['POST'])
 def delete_entry():
+    """Deletes an entry from the table."""
+
     # getting the id of the desired post to delete
     db = get_db()
     selected_entry_id = request.form['deleted_post']
@@ -135,4 +138,3 @@ def delete_entry():
     db.commit()
     flash("Entry Deleted")
     return redirect(url_for('show_entries'))
-

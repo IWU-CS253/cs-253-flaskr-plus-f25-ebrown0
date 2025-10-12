@@ -3,11 +3,11 @@
   <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
     <dl>
       <dt>Title:
-      <dd><input type="text" size="30" name="title">
+      <dd><input type="text" size="30" name="title" placeholder="Title">
       <dt>Text:
-      <dd><textarea name="text" rows="5" cols="40"></textarea>
+      <dd><textarea name="text" rows="5" cols="40" placeholder="Text"></textarea>
       <dt>Category:
-      <dd><input name="category" type="text" size="30"></dd>
+      <dd><input name="category" type="text" size="30" placeholder="Category"></dd>
 
       <dd><input type="submit" value="Share">
     </dl>
@@ -18,9 +18,9 @@
         <form action="{{ url_for('show_selected') }}" method="post" name="selected-category">
 
                 <select name="selected_category">
-                    <option disabled>Category</option>
+                    <option disabled selected>Category</option>
                     {% for category in categories %}
-                        <option name="show_selected" value="{{  category }}">{{ category }}</option>
+                        <option name="show_selected" value="{{ category }}">{{ category }}</option>
                     {% endfor %}
                     <option value="all" >All</option>
                 </select>
