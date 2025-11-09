@@ -63,7 +63,6 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
-
 @app.route('/')
 def show_entries():
     """Show the entries in a database. It shows title, text, and category"""
@@ -82,6 +81,7 @@ def show_entries():
 
     return render_template('show_entries.html', entries=entries, categories=categories)
 
+
 @app.route('/add', methods=['POST'])
 def add_entry():
     """Adds an entry to database. It adds an entry with a
@@ -95,6 +95,7 @@ def add_entry():
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
+
 
 @app.route('/show_selected', methods=['POST'])
 def show_selected():
@@ -137,4 +138,34 @@ def delete_entry():
     cur = db.execute('DELETE from entries where id = ?', [selected_entry_id])
     db.commit()
     flash("Entry Deleted")
+    return redirect(url_for('show_entries'))
+
+@app.route('/edit_entry', methods=['POST'])
+def edit_entry():
+    """Sends users to a page to update a post."""
+
+    # getting the post's old information and current id
+    db = get_db()
+    old_title = request.form['old_title']
+    old_category = request.form['old_category']
+    old_text = request.form['old_text']
+    id = request.form['id']
+
+
+    # redirecting to the edit entry page where the old information will remain
+    # in the input fields
+    return render_template('edit_entry.html', old_title=old_title, old_category=old_category, old_text=old_text, id = id )
+
+@app.route('/update_edited_entry', methods=['POST'])
+def update_edited_entry():
+    """Allows users to update specific information on posts."""
+
+    # updating the post's information in the database and commiting it
+    db = get_db()
+    db.execute('UPDATE entries SET title = ?, text = ?, category = ? WHERE id = ?',
+               [request.form['updated_title'], request.form['updated_text'], request.form['updated_category'], request.form['id']] )
+    db.commit()
+
+    # informing the user that the entry was added after they ae redirected
+    flash('New entry was successfully updated.')
     return redirect(url_for('show_entries'))

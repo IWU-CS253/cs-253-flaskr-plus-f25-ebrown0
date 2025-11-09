@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<div class="container mt-5" style="width: 30rem;">
+<div class="card shadow-lg">
+    <div class="card-body">
+<form action="{{ url_for('update_edited_entry') }}" method="post" class="mb-3">
+    <div class="mb-3">
+    <label for="updated_tit le" class="form-label">Title</label>
+      <input type="text" size="10" name="updated_title" value="{{ old_title }}" class="form-control">
+    </div>
+        <div class="mb-3">
+    <label for="updated_category" class="form-label">Category</label>
+      <input name="updated_category" type="text" size="30" value="{{ old_category }}" class="form-control">
+</div>
+            <div class="mb-3">
+    <label for="updated_text" class="form-label">Text</label>
+      <textarea name="updated_text" rows="5" cols="40" class="form-control">{{ old_text }}</textarea>
+
+            </div>
+    <input type="hidden" name="id" value="{{ id }}">
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+</div>
+    </div>
+    </div>
+
+{%endblock%}

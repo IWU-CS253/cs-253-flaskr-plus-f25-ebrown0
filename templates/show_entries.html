@@ -37,6 +37,22 @@
           <button type="submit">Delete Post</button>
 
       </form>
+      <form action="{{ url_for('edit_entry') }}" name="updated_post" method="post">
+          <input type="hidden" name="old_title" value="{{ entry.title }}">
+          <input type="hidden" name="old_category" value="{{ entry.category }}">
+          <input type="hidden" name="old_text" value="{{ entry.text}}">
+          <input type="hidden" name="id" value="{{ entry.id}}">
+
+          <button type="submit">Edit Post</button>
+
+      </form>
+
+
+
+
+
+
+
 
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em></li>
